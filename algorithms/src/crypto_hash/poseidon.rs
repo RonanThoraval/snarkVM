@@ -26,8 +26,8 @@ use std::{
 
 #[derive(Copy, Clone, Debug)]
 pub struct State<F: PrimeField, const RATE: usize, const CAPACITY: usize> {
-    capacity_state: [F; CAPACITY],
-    rate_state: [F; RATE],
+    pub capacity_state: [F; CAPACITY],
+    pub rate_state: [F; RATE],
 }
 
 impl<F: PrimeField, const RATE: usize, const CAPACITY: usize> Default for State<F, RATE, CAPACITY> {
