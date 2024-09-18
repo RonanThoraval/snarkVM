@@ -117,6 +117,20 @@ pub struct PoseidonSponge<F: PrimeField, const RATE: usize, const CAPACITY: usiz
     adjustment_factor_lookup_table: Arc<[F]>,
 }
 
+impl<F: PrimeField, const RATE: usize, const CAPACITY: usize> PoseidonSponge<F, RATE, CAPACITY> {
+    pub fn get_parameters(&self) -> Arc<PoseidonParameters<F, RATE, CAPACITY>> {
+        Arc::clone(&self.parameters)
+    }
+
+    pub fn get_state(&self) -> &State<F, RATE, CAPACITY> {
+        &self.state
+    }
+
+    pub fn get_adjustment_factor_lookup_table(&self) -> Arc<[F]> {
+        Arc::clone(&self.adjustment_factor_lookup_table)
+    }
+}
+
 impl<F: PrimeField, const RATE: usize> AlgebraicSponge<F, RATE> for PoseidonSponge<F, RATE, 1> {
     type Parameters = Arc<PoseidonParameters<F, RATE, 1>>;
 
