@@ -108,27 +108,13 @@ impl<F: PrimeField, const RATE: usize> Poseidon<F, RATE> {
 #[derive(Clone, Debug)]
 pub struct PoseidonSponge<F: PrimeField, const RATE: usize, const CAPACITY: usize> {
     /// Sponge Parameters
-    parameters: Arc<PoseidonParameters<F, RATE, CAPACITY>>,
+    pub parameters: Arc<PoseidonParameters<F, RATE, CAPACITY>>,
     /// Current sponge's state (current elements in the permutation block)
-    state: State<F, RATE, CAPACITY>,
+    pub state: State<F, RATE, CAPACITY>,
     /// Current mode (whether its absorbing or squeezing)
     pub mode: DuplexSpongeMode,
     /// A persistent lookup table used when compressing elements.
-    adjustment_factor_lookup_table: Arc<[F]>,
-}
-
-impl<F: PrimeField, const RATE: usize, const CAPACITY: usize> PoseidonSponge<F, RATE, CAPACITY> {
-    pub fn get_parameters(&self) -> Arc<PoseidonParameters<F, RATE, CAPACITY>> {
-        Arc::clone(&self.parameters)
-    }
-
-    pub fn get_state(&self) -> &State<F, RATE, CAPACITY> {
-        &self.state
-    }
-
-    pub fn get_adjustment_factor_lookup_table(&self) -> Arc<[F]> {
-        Arc::clone(&self.adjustment_factor_lookup_table)
-    }
+    pub adjustment_factor_lookup_table: Arc<[F]>,
 }
 
 impl<F: PrimeField, const RATE: usize> AlgebraicSponge<F, RATE> for PoseidonSponge<F, RATE, 1> {
