@@ -39,9 +39,9 @@ pub type Poseidon8<E> = Poseidon<E, 8>;
 #[derive(Clone, Debug, PartialEq)]
 pub struct Poseidon<E: Environment, const RATE: usize> {
     /// The domain separator for the Poseidon hash function.
-    domain: Field<E>,
+    pub domain: Field<E>,
     /// The Poseidon parameters for hashing.
-    parameters: Arc<PoseidonParameters<E::Field, RATE, CAPACITY>>,
+    pub parameters: Arc<PoseidonParameters<E::Field, RATE, CAPACITY>>,
 }
 
 impl<E: Environment, const RATE: usize> Poseidon<E, RATE> {
