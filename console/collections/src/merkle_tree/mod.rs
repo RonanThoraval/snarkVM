@@ -45,6 +45,7 @@ pub struct MerkleTree<E: Environment, LH: LeafHash<Hash = PH::Hash>, PH: PathHas
     empty_hash: Field<E>,
     /// The number of hashed leaves in the tree.
     number_of_leaves: usize,
+    leaves: Vec<LH::Leaf>,
 }
 
 impl<E: Environment, LH: LeafHash<Hash = PH::Hash>, PH: PathHash<Hash = Field<E>>, const DEPTH: u8>
@@ -86,6 +87,8 @@ impl<E: Environment, LH: LeafHash<Hash = PH::Hash>, PH: PathHash<Hash = Field<E>
 
         // Initialize the Merkle tree.
         let mut tree = vec![empty_hash; minimum_tree_size];
+
+        let leaves_clone = leaves.clone().to_vec();
 
         // Compute and store each leaf hash.
         tree[num_nodes..num_nodes + leaves.len()].copy_from_slice(&leaf_hasher.hash_leaves(leaves)?);
@@ -135,6 +138,7 @@ impl<E: Environment, LH: LeafHash<Hash = PH::Hash>, PH: PathHash<Hash = Field<E>
             tree,
             empty_hash,
             number_of_leaves: leaves.len(),
+            leaves: leaves_clone,
         })
     }
 
@@ -159,6 +163,10 @@ impl<E: Environment, LH: LeafHash<Hash = PH::Hash>, PH: PathHash<Hash = Field<E>
 
         // Initialize the Merkle tree.
         let mut tree = vec![self.empty_hash; num_nodes];
+
+        let mut leaves_clone = self.leaves.clone();
+        leaves_clone.extend(new_leaves.to_vec());
+
         // Extend the new Merkle tree with the existing leaf hashes.
         tree.extend(self.leaf_hashes()?);
         // Extend the new Merkle tree with the new leaf hashes.
@@ -218,6 +226,7 @@ impl<E: Environment, LH: LeafHash<Hash = PH::Hash>, PH: PathHash<Hash = Field<E>
             tree,
             empty_hash: self.empty_hash,
             number_of_leaves: self.number_of_leaves + new_leaves.len(),
+            leaves: leaves_clone,
         })
     }
 
@@ -304,6 +313,10 @@ impl<E: Environment, LH: LeafHash<Hash = PH::Hash>, PH: PathHash<Hash = Field<E>
 
         // Initialize the Merkle tree.
         let mut tree = Vec::with_capacity(self.tree.len());
+
+        let mut leaves_clone = self.leaves.clone();
+        leaves_clone.extend(vec![new_leaf.clone()]);
+
         // Extend the new Merkle tree with the existing leaf hashes.
         tree.extend(&self.tree);
 
@@ -323,6 +336,7 @@ impl<E: Environment, LH: LeafHash<Hash = PH::Hash>, PH: PathHash<Hash = Field<E>
             tree,
             empty_hash: self.empty_hash,
             number_of_leaves: self.number_of_leaves,
+            leaves: leaves_clone,
         })
     }
 
@@ -490,6 +504,10 @@ impl<E: Environment, LH: LeafHash<Hash = PH::Hash>, PH: PathHash<Hash = Field<E>
 
         // Initialize the Merkle tree.
         let mut tree = vec![self.empty_hash; num_nodes];
+        let leaves_clone = self.leaves.clone();
+        let leaves_clone = leaves_clone[..leaves_clone.len().saturating_sub(n)].to_vec();
+
+
         // Extend the new Merkle tree with the existing leaf hashes, excluding the last 'n' leaves.
         tree.extend(&self.leaf_hashes()?[..updated_number_of_leaves]);
         // Resize the new Merkle tree with empty hashes to pad up to `tree_size`.
@@ -540,6 +558,7 @@ impl<E: Environment, LH: LeafHash<Hash = PH::Hash>, PH: PathHash<Hash = Field<E>
             tree,
             empty_hash: self.empty_hash,
             number_of_leaves: updated_number_of_leaves,
+            leaves: leaves_clone,
         })
     }
 
@@ -618,6 +637,10 @@ impl<E: Environment, LH: LeafHash<Hash = PH::Hash>, PH: PathHash<Hash = Field<E>
     /// Returns the Merkle tree (excluding the hashes of the leaves).
     pub fn tree(&self) -> &[PH::Hash] {
         &self.tree
+    }
+
+    pub fn leaves(&self) -> &[LH::Leaf] {
+        &self.leaves
     }
 
     /// Returns the empty hash.
