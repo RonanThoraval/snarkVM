@@ -26,7 +26,7 @@ impl Blake2Xs {
     ///  - `input` is an input message as a slice of bytes,
     ///  - `XOF_DIGEST_LENGTH` is a `u16` set to the length of the final output digest in bytes,
     ///  - `PERSONALIZATION` is a `u64` representing a UTF-8 string of 8 characters.
-    fn evaluate(input: &[u8], xof_digest_length: u16, persona: &[u8]) -> Vec<u8> {
+    pub fn evaluate(input: &[u8], xof_digest_length: u16, persona: &[u8]) -> Vec<u8> {
         assert!(xof_digest_length > 0, "Output digest must be of non-zero length");
         assert!(persona.len() <= 8, "Personalization may be at most 8 characters");
 
