@@ -21,7 +21,7 @@ mod hash_to_curve;
 
 pub struct Blake2Xs;
 
-impl Blake2Xs {
+pub impl Blake2Xs {
     /// Returns the BLAKE2Xs digest given:
     ///  - `input` is an input message as a slice of bytes,
     ///  - `XOF_DIGEST_LENGTH` is a `u16` set to the length of the final output digest in bytes,
